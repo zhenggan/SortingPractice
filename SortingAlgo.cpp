@@ -1,6 +1,7 @@
 #include "SortingAlgo.h"
 #include <limits.h>
 #include <iostream>
+#include <memory.h>
 
 void swap(int *element1, int *element2)
 {
@@ -58,10 +59,99 @@ void insertionSort(int *array, int size)
     }   
 }
 
-//
+/*****
+ *  @Descrip Merge 2 sorted arrays into 1 sorted array
+ *  @param leftarray left subarray
+ *  @param rightArray right subarray
+ *  @param int array the main array
+ *  @param leftArraySize size of left subarray
+ *  @param rightArraySize size of right subarray
+ *  @param size size of main array
+ *
+ */
+void merge(int *leftArray, int *rightArray, int *array, int leftArraySize, int rightArraySize, int size)
+{
+    //Current index of left, right, and main arrays
+    int leftElement = 0;
+    int rightElement = 0;
+    int arrayElement = 0;
+
+    //While both left and right arrays still have elements left, merge them
+    while (leftElement < leftArraySize && rightElement < rightArraySize)
+    {
+        if (leftArray[leftElement] < rightArray[rightElement])
+        {
+            array[arrayElement] = leftArray[leftElement];
+            arrayElement++;
+            leftElement++;
+        }
+        else
+        {
+            array[arrayElement] = rightArray[rightElement];
+            arrayElement++;
+            rightElement++;
+        }
+    }  
+    
+    //When one of the subarrays runs out of elements, dump the other subarray into the main array
+    while (leftElement < leftArraySize)
+    {
+        array[arrayElement] = leftArray[leftElement];
+        arrayElement++;
+        leftElement++;
+    }
+
+    while (rightElement < rightArraySize)
+    {
+        array[arrayElement] = rightArray[rightElement];
+        arrayElement++;
+        rightElement++;
+    }
+} 
+
+//O(nlogn) average time
 void mergeSort(int *array, int size)
 {
+    //exit case
+    if (size <= 1)
+    {
+        return;
+    }
+    bool sizeOdd = false;
 
+    if (size % 2 != 0)
+    {
+        sizeOdd = true;
+    }
+
+    int leftArraySize = size / 2;
+    int *leftArray = new int[leftArraySize];
+    int *rightArray = NULL;
+    int rightArraySize = 0;
+
+    //If size of array is odd, give right subarray the extra element
+    if (sizeOdd == true)
+    {
+        rightArraySize = leftArraySize + 1;
+    }
+    else
+    {
+        rightArraySize = leftArraySize;
+    }
+    rightArray = new int[rightArraySize];
+
+    memcpy(leftArray, array, leftArraySize*sizeof(int));
+    memcpy(rightArray, array+leftArraySize, rightArraySize*sizeof(int));
+  
+    //Recursively divide the arrays
+    mergeSort(leftArray, leftArraySize);
+    mergeSort(rightArray, rightArraySize);
+    
+    //Merge the array
+    merge(leftArray, rightArray, array, leftArraySize, rightArraySize, size);
+   
+    delete [] leftArray;
+    delete [] rightArray; 
 }
 
 

@@ -40,6 +40,10 @@ int main(int argc, char* argv[])
     {
         insertionSort(array, sizeofArray);
     }
+    else if (sortSelect == 4)
+    {
+        mergeSort(array, sizeofArray);
+    }
     else
     {
         std::cout << "Please select a valid sort option" << std::endl;
@@ -52,7 +56,7 @@ int main(int argc, char* argv[])
     }
     std::cout<< std::endl;
     
-    
+    delete [] array;
     return 0;
 
 }
