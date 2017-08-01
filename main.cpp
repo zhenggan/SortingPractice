@@ -44,6 +44,10 @@ int main(int argc, char* argv[])
     {
         mergeSort(array, sizeofArray);
     }
+    else if (sortSelect == 5)
+    {
+        quickSort(array, 0, sizeofArray - 1);
+    }
     else
     {
         std::cout << "Please select a valid sort option" << std::endl;

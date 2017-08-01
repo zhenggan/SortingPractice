@@ -2,6 +2,8 @@
 #include <limits.h>
 #include <iostream>
 #include <memory.h>
+#include <time.h>
+#include <stdlib.h>
 
 void swap(int *element1, int *element2)
 {
@@ -154,7 +156,57 @@ void mergeSort(int *array, int size)
     delete [] rightArray; 
 }
 
+//Pivots the array so that elements valued less than pivot are to the left of it
+//and elements valued greater than pivot are to the right
+int pivot(int *array, int pivotIndex, int arrayStart, int arrayEnd)
+{
+    //Swap the selected pivot value with the end value, this makes pivoting easier without
+    //sacrificing much computation time
+    swap(&array[pivotIndex], &array[arrayEnd]);
 
+    //Start the index 1 less than start of array, this counts how many elements have already been pivoted
+    int alreadySortedIndex = arrayStart - 1;
+    for (int loop = arrayStart; loop < arrayEnd; loop++)
+    {
+        if (array[loop] <= array[arrayEnd]) 
+        {
+            alreadySortedIndex++;
+            swap(&array[loop], &array[alreadySortedIndex]);
+        }   
+    }
+    alreadySortedIndex++;
+    swap(&array[alreadySortedIndex], &array[arrayEnd]);
+    pivotIndex = alreadySortedIndex;
+
+    //return new index of pivot value to the caller
+    return pivotIndex;
+}
+
+//Random pivot quicksort, O(nlogn) average can be O(n^2) worst case if pivot is badly chosen,
+//Choosing pivot randomly minimizes this risk
+void quickSort(int *array, int arrayStart, int arrayEnd)
+{
+    //Exit condition
+    if (arrayStart == arrayEnd)
+    {
+        return;
+    }
+    srand(time(NULL));
+    int pivotIndex =  (rand() % (arrayEnd - arrayStart + 1) + arrayStart);
+
+    pivotIndex = pivot(array, pivotIndex, arrayStart, arrayEnd);
+
+    //If statements to prevent seg faults
+    if (pivotIndex != arrayStart)
+    {
+        quickSort(array, arrayStart, pivotIndex - 1);
+    }
+  
+    if (pivotIndex != arrayEnd)
+    {
+        quickSort(array, pivotIndex + 1, arrayEnd);
+    }  
+}
 
 
 
